@@ -1,14 +1,5 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/spaceship-portfolio/',
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: true
-  },
-  server: {
-    host: true,
-    open: true
-  }
+  base: '/spaceship-portfolio/'
 })
