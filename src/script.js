@@ -79,7 +79,7 @@ for(let i = 0; i < 5; i++) {
     
     platform.position.set(
         (Math.random() - 0.5) * 500,
-        Math.random() * 20,
+        -Math.random() * 30 - 10, // Always below spaceship (spaceship is at y=5)
         (Math.random() - 0.5) * 500
     )
     platform.castShadow = true
@@ -96,15 +96,18 @@ let loadedModels = 0
 const totalModels = 4
 
 // Simple car-like physics for spaceship
+const initialPosition = new THREE.Vector3(0, 5, 0)
+const initialRotation = 0
+
 const spaceshipPhysics = {
     velocity: new THREE.Vector3(0, 0, 0),
     speed: 0,
-    maxSpeed: 3,
-    acceleration: 0.15,
+    maxSpeed: 2, // Reduced from 3 to 2
+    acceleration: 0.1, // Reduced from 0.15 to 0.1
     deceleration: 0.95,
-    turnSpeed: 0.03,
-    position: new THREE.Vector3(0, 5, 0),
-    rotation: 0,
+    turnSpeed: 0.025, // Reduced from 0.03 to 0.025
+    position: initialPosition.clone(),
+    rotation: initialRotation,
     wheelAngle: 0,
     wheelAngleTarget: 0,
     banking: 0,
@@ -116,7 +119,19 @@ const keys = {
     forward: false,
     backward: false,
     left: false,
-    right: false
+    right: false,
+    reset: false
+}
+
+// Reset function
+function resetSpaceship() {
+    spaceshipPhysics.position.copy(initialPosition)
+    spaceshipPhysics.rotation = initialRotation
+    spaceshipPhysics.speed = 0
+    spaceshipPhysics.velocity.set(0, 0, 0)
+    spaceshipPhysics.banking = 0
+    spaceshipPhysics.wheelAngle = 0
+    console.log('🚀 Spaceship reset to initial position!')
 }
 
 // Event listeners
@@ -137,6 +152,9 @@ window.addEventListener('keydown', (event) => {
         case 'KeyD':
         case 'ArrowRight':
             keys.right = true
+            break
+        case 'KeyR':
+            resetSpaceship()
             break
     }
 })
@@ -403,24 +421,29 @@ function updateSpaceshipPhysics() {
 }
 
 function updateCamera() {
-    // Follow spaceship
+    // Camera always stays behind the spaceship
     const spaceshipPos = spaceshipPhysics.position
-    const cameraTarget = spaceshipPos.clone().add(cameraOffset)
     
-    // Apply spaceship rotation to camera offset
-    const rotatedOffset = cameraOffset.clone()
-    rotatedOffset.applyAxisAngle(new THREE.Vector3(0, 1, 0), spaceshipPhysics.rotation)
-    cameraTarget.copy(spaceshipPos).add(rotatedOffset)
+    // Calculate the position behind the spaceship based on its rotation
+    const behindDistance = 25 // Distance behind spaceship
+    const heightOffset = 15   // Height above spaceship
+    
+    // Position camera behind the spaceship
+    const cameraPosition = new THREE.Vector3(
+        spaceshipPos.x - Math.sin(spaceshipPhysics.rotation) * behindDistance,
+        spaceshipPos.y + heightOffset,
+        spaceshipPos.z - Math.cos(spaceshipPhysics.rotation) * behindDistance
+    )
     
     // Smooth camera movement
-    camera.position.lerp(cameraTarget, 0.05)
+    camera.position.lerp(cameraPosition, 0.08)
     
-    // Look at spaceship with slight forward bias
+    // Always look at the spaceship with slight forward bias
     const lookTarget = spaceshipPos.clone()
     const forwardBias = new THREE.Vector3(
-        Math.sin(spaceshipPhysics.rotation) * 10,
+        Math.sin(spaceshipPhysics.rotation) * 15,
         0,
-        Math.cos(spaceshipPhysics.rotation) * 10
+        Math.cos(spaceshipPhysics.rotation) * 15
     )
     lookTarget.add(forwardBias)
     
@@ -446,6 +469,7 @@ W/↑ - Accelerate forward
 S/↓ - Reverse / Brake
 A/← - Turn left
 D/→ - Turn right
+R   - Reset to start position
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 `)
 
@@ -488,6 +512,7 @@ controlsDiv.innerHTML = `
         <div><strong>S</strong> or <strong>↓</strong> - Reverse</div>
         <div><strong>A</strong> or <strong>←</strong> - Turn Left</div>
         <div><strong>D</strong> or <strong>→</strong> - Turn Right</div>
+        <div><strong>R</strong> - Reset Position</div>
     </div>
     <div style="font-size: 12px; margin-top: 10px; color: #888888;">
     [Jamie CC Huang Portfolio]
