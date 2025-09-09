@@ -4,7 +4,7 @@ export const SPACESHIP_CONFIG = {
     acceleration: 0.1,
     deceleration: 0.95,
     turnSpeed: 0.025,
-    initialPosition: { x: 0, y: 5, z: 0 },
+    initialPosition: { x: 0, y: 100, z: -400 }, // Further back and much higher for overview
     initialRotation: 0,
     floatAmplitude: 2,
     floatSpeed: 0.002,
@@ -24,25 +24,25 @@ export const SCENE_CONFIG = {
 export const LIGHTING_CONFIG = {
     ambientLight: {
         color: 0x404040,
-        intensity: 1.2
+        intensity: 1.8 // Increased from 1.2 for brighter overall lighting
     },
     directionalLight: {
         color: 0xffffff,
-        intensity: 2,
-        position: { x: 50, y: 50, z: 50 },
+        intensity: 3.0, // Increased intensity to light everything in front
+        position: { x: 0, y: 150, z: -500 }, // Behind and above spaceship to light everything forward
         shadowMapSize: 2048
     },
     pointLight1: {
         color: 0x0088ff,
-        intensity: 1.5,
-        distance: 400,
-        position: { x: 100, y: 50, z: -100 }
+        intensity: 2.0, // Increased intensity
+        distance: 500, // Increased range
+        position: { x: -100, y: 120, z: -450 } // Behind and to the left of spaceship
     },
     pointLight2: {
         color: 0xff4400,
-        intensity: 1,
-        distance: 300,
-        position: { x: -80, y: -30, z: 120 }
+        intensity: 1.5, // Increased intensity
+        distance: 400, // Increased range
+        position: { x: 100, y: 80, z: -350 } // Behind and to the right of spaceship
     }
 }
 
@@ -54,9 +54,9 @@ export const PLATFORM_CONFIG = {
 }
 
 export const PLANET_POSITIONS = [
-    { x: 200, y: 30, z: -300 },
-    { x: -150, y: 25, z: 200 },
-    { x: 300, y: 35, z: 100 }
+    { x: -300, y: 50, z: 150 },   // Planet1 - far left, good separation
+    { x: 0, y: 30, z: 350 },      // Planet2 (Saturn) - center but much further out
+    { x: 400, y: 70, z: 200 }     // Planet3 - far right, widely spaced
 ]
 
 export const CONTROLS = {

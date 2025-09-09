@@ -9,6 +9,7 @@ export class SpaceshipPhysics {
         this.acceleration = SPACESHIP_CONFIG.acceleration
         this.deceleration = SPACESHIP_CONFIG.deceleration
         this.turnSpeed = SPACESHIP_CONFIG.turnSpeed
+        this.collisionRadius = 4 // Increased from 3 to 4 for better collision detection
         
         this.initialPosition = new THREE.Vector3(
             SPACESHIP_CONFIG.initialPosition.x,
@@ -23,9 +24,19 @@ export class SpaceshipPhysics {
         this.wheelAngleTarget = 0
         this.banking = 0
         this.bankingTarget = 0
+
+        // Collision system
+        this.collisionDetector = null
+    }
+
+    setCollisionDetector(collisionDetector) {
+        this.collisionDetector = collisionDetector
     }
 
     update(keys) {
+        // Store current position for collision resolution
+        const previousPosition = this.position.clone()
+        
         // Simple car-like controls
         let accelerating = false
         
@@ -71,19 +82,37 @@ export class SpaceshipPhysics {
         this.wheelAngle = THREE.MathUtils.lerp(this.wheelAngle, this.wheelAngleTarget, 0.1)
         this.banking = THREE.MathUtils.lerp(this.banking, this.bankingTarget, 0.05)
         
-        // Update position based on rotation and speed
+        // Calculate target position based on movement
         const direction = new THREE.Vector3(
             Math.sin(this.rotation),
             0,
             Math.cos(this.rotation)
         )
         direction.multiplyScalar(this.speed)
-        this.position.add(direction)
+        const targetPosition = this.position.clone().add(direction)
         
         // Keep spaceship above ground with gentle floating
         const targetY = SPACESHIP_CONFIG.initialPosition.y + 
                        Math.sin(Date.now() * SPACESHIP_CONFIG.floatSpeed) * SPACESHIP_CONFIG.floatAmplitude
-        this.position.y = THREE.MathUtils.lerp(this.position.y, targetY, 0.02)
+        targetPosition.y = THREE.MathUtils.lerp(this.position.y, targetY, 0.02)
+        
+        // Check for collisions and resolve them
+        if (this.collisionDetector) {
+            this.position = this.collisionDetector.resolveCollision(
+                previousPosition, 
+                targetPosition, 
+                this.collisionRadius
+            )
+            
+            // If we hit something, reduce speed
+            const collision = this.collisionDetector.checkCollision(targetPosition, this.collisionRadius)
+            if (collision.collided) {
+                this.speed *= 0.1 // Dramatically reduce speed when hitting something
+                console.log('💥 Spaceship collision detected!')
+            }
+        } else {
+            this.position.copy(targetPosition)
+        }
     }
 
     reset() {
@@ -108,5 +137,9 @@ export class SpaceshipPhysics {
 
     getBanking() {
         return this.banking
+    }
+
+    getCollisionRadius() {
+        return this.collisionRadius
     }
 }

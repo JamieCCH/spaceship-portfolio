@@ -11,6 +11,7 @@ import { Platforms } from './objects/Platforms.js'
 import { Planets } from './objects/Planets.js'
 import { Spaceship } from './objects/Spaceship.js'
 import { ModelLoader } from './utils/ModelLoader.js'
+import { CollisionDetector } from './utils/CollisionDetector.js'
 import { LoadingScreen } from './ui/LoadingScreen.js'
 import { ControlsOverlay } from './ui/ControlsOverlay.js'
 import { SCENE_CONFIG } from './utils/Constants.js'
@@ -22,6 +23,9 @@ class SpacePortfolio {
     }
 
     async init() {
+        // Initialize collision system
+        this.collisionDetector = new CollisionDetector()
+        
         // Initialize core systems
         this.scene = new Scene()
         this.camera = new Camera()
@@ -29,6 +33,7 @@ class SpacePortfolio {
         
         // Initialize physics
         this.spaceshipPhysics = new SpaceshipPhysics()
+        this.spaceshipPhysics.setCollisionDetector(this.collisionDetector)
         
         // Initialize controls
         this.controls = new Controls(this.spaceshipPhysics)
@@ -47,8 +52,8 @@ class SpacePortfolio {
         
         // Initialize world objects
         this.environment = new Environment(this.scene)
-        this.platforms = new Platforms(this.scene)
-        this.planets = new Planets(this.scene, this.modelLoader)
+        this.platforms = new Platforms(this.scene, this.collisionDetector)
+        this.planets = new Planets(this.scene, this.modelLoader, this.collisionDetector)
         this.spaceship = new Spaceship(this.scene, this.modelLoader, this.spaceshipPhysics)
         
         // Start animation loop
@@ -61,6 +66,7 @@ class SpacePortfolio {
 
     onLoadingComplete() {
         console.log('🌟 All models loaded! Ready to fly!')
+        console.log('💥 Collision detection enabled - try flying into planets!')
         this.animationStarted = true
         
         // Remove loading screen and show controls

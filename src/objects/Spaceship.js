@@ -33,6 +33,7 @@ export class Spaceship {
         }
     }
 
+    // Create simple spaceship if model fails
     createSimpleSpaceship() {
         const group = new THREE.Group()
         
