@@ -1,4 +1,4 @@
-console.log('🚀 Space Portfolio Loading...')
+console.log('🚀 Space Portfolio Loading... Updated:', new Date().toISOString())
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
