@@ -16,7 +16,7 @@ export class Planets {
     }
 
     async loadPlanets() {
-        for(let i = 1; i <= 3; i++) {
+        for(let i = 1; i <= 6; i++) { // Load all 6 planet GLB files
             try {
                 const gltf = await this.modelLoader.loadModel(
                     `models/Planet${i}.glb`,
@@ -52,16 +52,50 @@ export class Planets {
 
     createFallbackPlanet(index) {
         const planetGeometry = new THREE.SphereGeometry(25, 32, 16)
-        const planetMaterial = new THREE.MeshLambertMaterial({ 
-            color: new THREE.Color().setHSL(Math.random(), 0.7, 0.5)
-        })
+        
+        // Create different planet types based on index
+        let planetMaterial
+        switch(index % 6) {
+            case 1: // Earthy planet
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.2, 0.6, 0.8) // Blue-ish
+                })
+                break
+            case 2: // Mars-like planet
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.8, 0.4, 0.2) // Reddish
+                })
+                break
+            case 3: // Gas giant
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.9, 0.8, 0.3) // Yellowish
+                })
+                break
+            case 4: // Purple alien planet
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.6, 0.2, 0.8) // Purple
+                })
+                break
+            case 5: // Green planet
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.2, 0.8, 0.4) // Green
+                })
+                break
+            case 0: // Orange planet
+            default:
+                planetMaterial = new THREE.MeshLambertMaterial({ 
+                    color: new THREE.Color(0.9, 0.5, 0.1) // Orange
+                })
+                break
+        }
+        
         const planet = new THREE.Mesh(planetGeometry, planetMaterial)
-        console.log(`Creating placeholder planet ${index}...`)
+        console.log(`Creating placeholder planet ${index} with unique coloring...`)
         return planet
     }
 
     setupPlanet(planet, index) {
-        const baseScale = 20 + Math.random() * 25
+        const baseScale = 12 + Math.random() * 8 // Reduced from 20-45 to 12-20
         planet.scale.setScalar(baseScale)
         
         const pos = PLANET_POSITIONS[index]
@@ -77,12 +111,12 @@ export class Planets {
         this.scene.addObject(planet)
         
         // Calculate collision radius based on scale and estimated model size
-        // Planet2 (Saturn) keeps original collision size, others get increased collision
+        // Reduced collision radii to prevent overlapping
         let collisionRadius
         if (index === 1) { // Planet2 (Saturn)
-            collisionRadius = baseScale * 1.2 // Original size for Saturn
+            collisionRadius = baseScale * 1.0 // Reduced for Saturn
         } else {
-            collisionRadius = baseScale * 2.0 // Increased for other planets
+            collisionRadius = baseScale * 1.2 // Reduced for other planets
         }
         
         return collisionRadius

@@ -4,7 +4,7 @@ export const SPACESHIP_CONFIG = {
     acceleration: 0.1,
     deceleration: 0.95,
     turnSpeed: 0.025,
-    initialPosition: { x: 0, y: 100, z: -400 }, // Further back and much higher for overview
+    initialPosition: { x: 0, y: 100, z: -50 }, // Positioned at z: -50 for optimal viewing distance
     initialRotation: 0,
     floatAmplitude: 2,
     floatSpeed: 0.002,
@@ -18,7 +18,7 @@ export const SCENE_CONFIG = {
     starsSize: 2,
     starsOpacity: 0.8,
     platformCount: 5,
-    totalModels: 4
+    totalModels: 7 // Correct count: 1 spaceship + 6 planet GLB files
 }
 
 export const LIGHTING_CONFIG = {
@@ -54,9 +54,12 @@ export const PLATFORM_CONFIG = {
 }
 
 export const PLANET_POSITIONS = [
-    { x: -300, y: 50, z: 150 },   // Planet1 - far left, good separation
-    { x: 0, y: 30, z: 350 },      // Planet2 (Saturn) - center but much further out
-    { x: 400, y: 70, z: 200 }     // Planet3 - far right, widely spaced
+    { x: -250, y: -20, z: 150 },   // Planet1 - left, below ship level
+    { x: 100, y: 120, z: 350 },    // Planet2 (Saturn) - center-right, above ship
+    { x: 300, y: 60, z: 200 },     // Planet3 - right, slightly above ship
+    { x: -150, y: 180, z: 280 },   // Planet4 - left, high up
+    { x: 200, y: -50, z: 180 },    // Planet5 - right, well below ship level
+    { x: -50, y: 30, z: 400 }      // Planet6 - center-left, slightly below ship
 ]
 
 export const CONTROLS = {
