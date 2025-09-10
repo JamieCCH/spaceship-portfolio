@@ -14,6 +14,7 @@ import { ModelLoader } from './utils/ModelLoader.js'
 import { CollisionDetector } from './utils/CollisionDetector.js'
 import { LoadingScreen } from './ui/LoadingScreen.js'
 import { ControlsOverlay } from './ui/ControlsOverlay.js'
+import { Crosshair } from './ui/Crosshair.js'
 import { SCENE_CONFIG } from './utils/Constants.js'
 
 class SpacePortfolio {
@@ -41,6 +42,7 @@ class SpacePortfolio {
         // Initialize UI
         this.loadingScreen = new LoadingScreen()
         this.controlsOverlay = new ControlsOverlay()
+        this.crosshair = new Crosshair()
         
         // Initialize model loader
         this.modelLoader = new ModelLoader()
@@ -56,6 +58,9 @@ class SpacePortfolio {
         this.planets = new Planets(this.scene, this.modelLoader, this.collisionDetector)
         this.spaceship = new Spaceship(this.scene, this.modelLoader, this.spaceshipPhysics)
         
+        // Connect crosshair to controls
+        this.controls.setCrosshair(this.crosshair)
+        
         // Start animation loop
         this.animate()
     }
@@ -67,12 +72,18 @@ class SpacePortfolio {
     onLoadingComplete() {
         console.log('🌟 All models loaded! Ready to fly!')
         console.log('💥 Collision detection enabled - try flying into planets!')
-        this.animationStarted = true
         
-        // Remove loading screen and show controls
-        this.loadingScreen.remove(() => {
-            this.controlsOverlay.show()
-        })
+        // Notify loading screen that loading is complete (shows START button)
+        this.loadingScreen.onLoadingComplete()
+        
+        // Override the startExperience method to handle the actual start
+        this.loadingScreen.startExperience = () => {
+            this.animationStarted = true
+            this.controls.enableControls() // Enable controls and show crosshair when starting
+            this.loadingScreen.remove(() => {
+                this.controlsOverlay.show()
+            })
+        }
     }
 
     animate() {
@@ -81,7 +92,8 @@ class SpacePortfolio {
         if (!this.animationStarted) return
         
         // Update physics
-        this.spaceshipPhysics.update(this.controls.getKeys())
+        // Update spaceship physics with keyboard and crosshair input
+        this.spaceshipPhysics.update(this.controls.getKeys(), this.controls.getCrosshairDirection())
         
         // Update all objects
         this.scene.update()
@@ -89,8 +101,8 @@ class SpacePortfolio {
         this.planets.update()
         this.spaceship.update()
         
-        // Update camera
-        this.camera.update(this.spaceshipPhysics)
+        // Update camera with crosshair direction for subtle panning
+        this.camera.update(this.spaceshipPhysics, this.controls.getCrosshairDirection())
         
         // Render
         this.renderer.render(this.scene.getScene(), this.camera.getCamera())

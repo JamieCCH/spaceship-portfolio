@@ -89,9 +89,10 @@ export class Spaceship {
     update() {
         if (!this.spaceship) return
         
-        // Apply physics to spaceship
+        // Apply physics to spaceship with 3D rotation
         this.spaceship.position.copy(this.spaceshipPhysics.getPosition())
         this.spaceship.rotation.y = this.spaceshipPhysics.getRotation()
+        this.spaceship.rotation.x = this.spaceshipPhysics.getPitch()
         this.spaceship.rotation.z = this.spaceshipPhysics.getBanking()
     }
 

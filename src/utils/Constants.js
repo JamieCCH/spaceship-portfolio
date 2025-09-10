@@ -4,12 +4,13 @@ export const SPACESHIP_CONFIG = {
     acceleration: 0.1,
     deceleration: 0.95,
     turnSpeed: 0.025,
-    initialPosition: { x: 0, y: 100, z: -50 }, // Positioned at z: -50 for optimal viewing distance
+    verticalSpeed: 5, // Increased from 1.5 for more noticeable movement
+    initialPosition: { x: 0, y: 50, z: -50 }, // Higher position for better view
     initialRotation: 0,
     floatAmplitude: 2,
     floatSpeed: 0.002,
-    behindDistance: 25,
-    heightOffset: 15
+    behindDistance: 15, // Closer camera distance
+    heightOffset: 5 // Reduced from 15 to position camera lower
 }
 
 export const SCENE_CONFIG = {
@@ -65,7 +66,5 @@ export const PLANET_POSITIONS = [
 export const CONTROLS = {
     forward: ['KeyW', 'ArrowUp'],
     backward: ['KeyS', 'ArrowDown'],
-    left: ['KeyA', 'ArrowLeft'],
-    right: ['KeyD', 'ArrowRight'],
     reset: ['KeyR']
 }

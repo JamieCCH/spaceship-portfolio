@@ -111,12 +111,14 @@ export class Planets {
         this.scene.addObject(planet)
         
         // Calculate collision radius based on scale and estimated model size
-        // Reduced collision radii to prevent overlapping
+        // Different collision radii for different planets
         let collisionRadius
         if (index === 1) { // Planet2 (Saturn)
             collisionRadius = baseScale * 1.0 // Reduced for Saturn
+        } else if (index === 3 || index === 4 || index === 5) { // Planet4, Planet5, Planet6
+            collisionRadius = baseScale * 2.5 // Increased collision size for Planet4, Planet5, Planet6
         } else {
-            collisionRadius = baseScale * 1.2 // Reduced for other planets
+            collisionRadius = baseScale * 1.2 // Standard for other planets
         }
         
         return collisionRadius

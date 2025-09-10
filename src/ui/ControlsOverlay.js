@@ -9,10 +9,9 @@ export class ControlsOverlay {
         this.controlsDiv.innerHTML = `
             <div style="font-size: 18px; margin-bottom: 10px; color: #00ffff;">🚀 CONTROLS</div>
             <div style="font-size: 14px; line-height: 1.8; color: #ffffff;">
-                <div><strong>W</strong> or <strong>↑</strong> - Accelerate</div>
-                <div><strong>S</strong> or <strong>↓</strong> - Reverse</div>
-                <div><strong>A</strong> or <strong>←</strong> - Turn Left</div>
-                <div><strong>D</strong> or <strong>→</strong> - Turn Right</div>
+                <div><strong>W</strong> - Accelerate Forward</div>
+                <div><strong>S</strong> - Reverse</div>
+                <div><strong>Mouse</strong> - Move crosshair to steer</div>
                 <div><strong>R</strong> - Reset Position</div>
             </div>
             <div style="font-size: 12px; margin-top: 10px; color: #888888;">

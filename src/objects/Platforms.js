@@ -55,14 +55,14 @@ export class Platforms {
             platform.castShadow = true
             platform.receiveShadow = true
             
-            // Register platform with collision detector
-            if (this.collisionDetector) {
-                const platformRadius = Math.max(
-                    PLATFORM_CONFIG.geometry.width,
-                    PLATFORM_CONFIG.geometry.depth
-                ) / 2 + 5 // Half the largest dimension + safety margin
-                this.collisionDetector.addCollider(platform, platformRadius, platform.position)
-            }
+            // Platform collisions removed - platforms no longer have collision detection
+            // if (this.collisionDetector) {
+            //     const platformRadius = Math.max(
+            //         PLATFORM_CONFIG.geometry.width,
+            //         PLATFORM_CONFIG.geometry.depth
+            //     ) / 2 + 5 // Half the largest dimension + safety margin
+            //     this.collisionDetector.addCollider(platform, platformRadius, platform.position)
+            // }
             
             this.platforms.push(platform)
             this.scene.addObject(platform)
